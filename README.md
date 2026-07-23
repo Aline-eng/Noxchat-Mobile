@@ -4,7 +4,7 @@ Cross-platform (iOS/Android) client for Noxchat — chat, games/betting, Vibes (
 
 ## Stack
 - Expo (React Native) + TypeScript (strict)
-- NativeWind (Tailwind for RN) for styling, tokens in `src/theme/`
+- `StyleSheet` + design tokens in `src/theme/` for styling (NativeWind was evaluated but its current release hard-requires `react-native-worklets`, which only has nightly builds right now — revisit once that stabilizes; see `docs/design-reference.md`)
 - React Navigation (bottom tabs + native stack)
 - react-native-reanimated + moti for motion
 - TanStack Query for server state, Zustand for local UI state
