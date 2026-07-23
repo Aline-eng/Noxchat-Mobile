@@ -1,6 +1,8 @@
 # Design Reference — Noxchat
 
-This condenses the design decisions already made and reviewed, so implementation doesn't re-litigate them. `web-prototype-reference.jsx` in this folder is a browser-only interactive mockup (built with plain React + CSS, not React Native) — useful for seeing exactly how something should look and behave, but don't port its code directly; RN needs `StyleSheet`/NativeWind and `moti`/`reanimated` instead of CSS.
+This condenses the design decisions already made and reviewed, so implementation doesn't re-litigate them. `web-prototype-reference.jsx` in this folder is a browser-only interactive mockup (built with plain React + CSS, not React Native) — useful for seeing exactly how something should look and behave, but don't port its code directly; RN needs `StyleSheet` and `moti`/`reanimated` instead of CSS.
+
+**Note on NativeWind:** it was considered for Tailwind-style class syntax in RN, but its current release (4.x, bundling `react-native-css-interop` 0.2.x) unconditionally requires `react-native-worklets`, a package that only has nightly builds as of this writing — it broke the Jest pipeline outright. Sprint 1 ships with plain `StyleSheet` + `src/theme/` instead. Worth revisiting once `react-native-worklets` has a stable release, but don't add it back without confirming that first.
 
 ## Palette (source: moodboard, not to be substituted)
 
