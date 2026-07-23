@@ -1,0 +1,101 @@
+import React from "react";
+import { Pressable } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Sparkles, Heart, Trophy } from "lucide-react-native";
+
+import { colors } from "@/theme";
+import { Avatar } from "@/components/ui/Avatar";
+import { SplashScreen } from "@/features/onboarding/screens/SplashScreen";
+import { OnboardingScreen } from "@/features/onboarding/screens/OnboardingScreen";
+import { HomeScreen } from "@/features/home/screens/HomeScreen";
+import { VibesScreen } from "@/features/vibes/screens/VibesScreen";
+import { GamesScreen } from "@/features/games/screens/GamesScreen";
+import { ChatListScreen } from "@/features/chat/screens/ChatListScreen";
+import { ConversationScreen } from "@/features/chat/screens/ConversationScreen";
+import { ProfileScreen } from "@/features/profile/screens/ProfileScreen";
+
+export type MainTabParamList = {
+  Home: undefined;
+  Vibes: undefined;
+  Games: undefined;
+};
+
+export type RootStackParamList = {
+  Splash: undefined;
+  Onboarding: undefined;
+  Main: undefined;
+  Profile: undefined;
+  ChatList: undefined;
+  Conversation: { chatId: string };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<MainTabParamList>();
+
+// TODO(Sprint 2/3): replace the default tab bar with the sliding-pill
+// indicator described in docs/design-reference.md, sized to just 3 items
+// per the "minimized bottom nav, profile lives up top" decision.
+function MainTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.forest,
+        tabBarInactiveTintColor: colors.donkey,
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ tabBarIcon: ({ color, size }) => <Sparkles color={color} size={size} /> }}
+      />
+      <Tab.Screen
+        name="Vibes"
+        component={VibesScreen}
+        options={{ tabBarIcon: ({ color, size }) => <Heart color={color} size={size} /> }}
+      />
+      <Tab.Screen
+        name="Games"
+        component={GamesScreen}
+        options={{ tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} /> }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+export function RootNavigator() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash">
+        <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="Main"
+          component={MainTabs}
+          options={({ navigation }) => ({
+            headerTitle: "Noxchat",
+            headerRight: () => (
+              <Pressable
+                onPress={() => navigation.navigate("Profile")}
+                accessibilityRole="button"
+                accessibilityLabel="Open profile"
+                style={{ marginRight: 4 }}
+              >
+                <Avatar name="You" size={32} />
+              </Pressable>
+            ),
+          })}
+        />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
+        <Stack.Screen name="ChatList" component={ChatListScreen} options={{ title: "Chats" }} />
+        <Stack.Screen
+          name="Conversation"
+          component={ConversationScreen}
+          options={{ title: "" }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
