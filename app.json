@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Noxchat",
+    "slug": "noxchat-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": { "supportsTablet": false, "bundleIdentifier": "app.noxchat.mobile" },
+    "android": { "package": "app.noxchat.mobile" },
+    "plugins": ["expo-font"]
+  }
+}
