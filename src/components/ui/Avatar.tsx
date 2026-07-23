@@ -37,7 +37,7 @@ export function Avatar({ name, size = 44, ring = false }: AvatarProps) {
         </LinearGradient>
       )}
       <LinearGradient
-        colors={[`hsl(${hue}, 32%, 42%)`, `hsl(${(hue + 30) % 360}, 28%, 26%)`] as unknown as string[]}
+        colors={[`hsl(${hue}, 32%, 42%)`, `hsl(${(hue + 30) % 360}, 28%, 26%)`] as [string, string]}
         style={{
           position: "absolute",
           top: ring ? 3 : 0,
