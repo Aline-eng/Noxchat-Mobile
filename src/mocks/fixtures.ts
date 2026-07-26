@@ -3,6 +3,10 @@
 // api/ folder, never directly — that indirection is what makes Sprint 6
 // (swapping to the real API) a non-event.
 
+// NOTE: docs/backend-spec.md has no Blog data model or endpoints at all
+// (it's one of the four pillars named in CLAUDE.md's product description,
+// but the spec doc never caught up). This shape is mock-only until that's
+// reconciled — flagged to the team rather than guessed into the spec.
 export interface BlogPost {
   id: string;
   title: string;
@@ -19,19 +23,57 @@ export const BLOGS: BlogPost[] = [
   { id: "b3", title: "Ghost mode is a feature, not a red flag", category: "Product", swatchColor: "#013324", author: "Priya N.", readTime: "3 min", excerpt: "Presence shouldn't be a performance." },
 ];
 
-export interface Vibe {
-  id: string;
-  userName: string;
-  swatchColor: string;
-  caption: string;
-  song: string | null;
+// NOTE: same gap as Blog above — there's no "personal now-playing" model in
+// docs/backend-spec.md. §4.8 Music Together is a shared-room concept
+// (host/participants/playback), not this. Mock-only until the spec adds it.
+export interface NowPlayingTrack {
+  title: string;
+  artist: string;
+  sharedBy: string;
+  durationSeconds: number;
 }
 
-export const VIBES: Vibe[] = [
-  { id: "v1", userName: "Maya", swatchColor: "#102C26", caption: "cabin weekend", song: "Sunset Blvd — Nia James" },
-  { id: "v2", userName: "Sam", swatchColor: "#C19A6B", caption: "3am diner run", song: null },
-  { id: "v3", userName: "Theo", swatchColor: "#013324", caption: "quiz night champion", song: "Victory Lap — KOTO" },
-  { id: "v4", userName: "Priya", swatchColor: "#A79277", caption: "new plant, who dis", song: null },
+export const NOW_PLAYING: NowPlayingTrack = {
+  title: "Sunset Blvd",
+  artist: "Nia James",
+  sharedBy: "Maya",
+  durationSeconds: 214,
+};
+
+// Status (24h stories) — shape matches docs/backend-spec.md §4.9 exactly.
+export interface Status {
+  id: string;
+  userId: string;
+  type: "text" | "image" | "video";
+  content?: string;
+  mediaUrl?: string;
+  hiddenFromUserIds: string[];
+  viewedByUserIds: string[];
+  reactions: Partial<Record<string, "love" | "laugh" | "shock" | "sad" | "thanks">>;
+  createdAt: string;
+  expiresAt: string;
+}
+
+// A real screen resolves author display names via GET /users/:id (§5.1).
+// There's no Users fixture yet, so this is the minimal subset of §4.1 User
+// (id + displayName) needed to render the stories row and swatch grid.
+export interface MockAuthor {
+  id: string;
+  displayName: string;
+}
+
+export const STATUS_AUTHORS: MockAuthor[] = [
+  { id: "u1", displayName: "Maya" },
+  { id: "u2", displayName: "Sam" },
+  { id: "u3", displayName: "Theo" },
+  { id: "u4", displayName: "Priya" },
+];
+
+export const STATUSES: Status[] = [
+  { id: "v1", userId: "u1", type: "text", content: "cabin weekend", hiddenFromUserIds: [], viewedByUserIds: [], reactions: {}, createdAt: "2026-07-22T09:00:00.000Z", expiresAt: "2026-07-23T09:00:00.000Z" },
+  { id: "v2", userId: "u2", type: "text", content: "3am diner run", hiddenFromUserIds: [], viewedByUserIds: [], reactions: {}, createdAt: "2026-07-22T11:00:00.000Z", expiresAt: "2026-07-23T11:00:00.000Z" },
+  { id: "v3", userId: "u3", type: "text", content: "quiz night champion", hiddenFromUserIds: [], viewedByUserIds: [], reactions: { u1: "love" }, createdAt: "2026-07-22T14:00:00.000Z", expiresAt: "2026-07-23T14:00:00.000Z" },
+  { id: "v4", userId: "u4", type: "text", content: "new plant, who dis", hiddenFromUserIds: [], viewedByUserIds: [], reactions: {}, createdAt: "2026-07-22T18:00:00.000Z", expiresAt: "2026-07-23T18:00:00.000Z" },
 ];
 
 export interface GameSession {

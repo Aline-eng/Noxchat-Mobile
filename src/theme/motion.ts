@@ -13,3 +13,11 @@ export const staggerCapMs = 400;
 export function staggerDelay(index: number): number {
   return Math.min(index * staggerMs, staggerCapMs);
 }
+
+// Timing-animation durations (fades/rises), distinct from the spring configs
+// above which are for gesture-driven motion.
+export const durations = {
+  fast: 150,
+  base: 220,
+  slow: 400,
+} as const;
