@@ -1,3 +1,4 @@
+import { colors } from "@/theme";
 import { GAME_SESSIONS, GAME_TYPE_LABELS, STATUS_AUTHORS, type GameSession } from "@/mocks/fixtures";
 
 export interface GameItem {
@@ -10,10 +11,10 @@ export interface GameItem {
 
 export type GameCategory = "live" | "1v1" | "party";
 
-export const GAME_CATEGORIES: { id: GameCategory; label: string }[] = [
-  { id: "live", label: "Live now" },
-  { id: "1v1", label: "1v1" },
-  { id: "party", label: "Party" },
+export const GAME_CATEGORIES: { id: GameCategory; label: string; color: string }[] = [
+  { id: "live", label: "Live now", color: colors.forestDeep },
+  { id: "1v1", label: "1v1", color: colors.donkey },
+  { id: "party", label: "Party", color: colors.forest },
 ];
 
 // Filter chips are a client-side view over GameSession, not a stored field
