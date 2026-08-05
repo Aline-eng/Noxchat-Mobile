@@ -1,12 +1,10 @@
 import React from "react";
-import { Pressable } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Sparkles, Heart, Trophy } from "lucide-react-native";
 
 import { colors } from "@/theme";
-import { Avatar } from "@/components/ui/Avatar";
 import { SplashScreen } from "@/features/onboarding/screens/SplashScreen";
 import { OnboardingScreen } from "@/features/onboarding/screens/OnboardingScreen";
 import { SignupScreen } from "@/features/auth/screens/SignupScreen";
@@ -80,23 +78,7 @@ export function RootNavigator() {
         <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Sign up" }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
         <Stack.Screen name="VerifyOtp" component={VerifyOtpScreen} options={{ title: "Verify code" }} />
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={({ navigation }) => ({
-            headerTitle: "Noxchat",
-            headerRight: () => (
-              <Pressable
-                onPress={() => navigation.navigate("Profile")}
-                accessibilityRole="button"
-                accessibilityLabel="Open profile"
-                style={{ marginRight: 4 }}
-              >
-                <Avatar name="You" size={32} />
-              </Pressable>
-            ),
-          })}
-        />
+        <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
         <Stack.Screen name="ChatList" component={ChatListScreen} options={{ title: "Chats" }} />
         <Stack.Screen

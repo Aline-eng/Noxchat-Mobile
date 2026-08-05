@@ -5,6 +5,7 @@ import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { RootStackParamList, MainTabParamList } from "@/navigation/RootNavigator";
+import { TopBar } from "@/components/ui/TopBar";
 import { FloatingChatButton } from "@/features/shared/components/FloatingChatButton";
 import { useReducedMotion } from "@/features/shared/hooks/useReducedMotion";
 import { useBlogFeed } from "@/features/home/api/useBlogFeed";
@@ -32,6 +33,7 @@ export function HomeScreen({ navigation }: Props) {
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <>
+            <TopBar onAvatarPress={() => navigation.navigate("Profile")} />
             <MusicCard track={track} isPlaying={isPlaying} onTogglePlay={togglePlay} />
             <Text style={styles.sectionHeader}>From your friends</Text>
           </>

@@ -5,6 +5,7 @@ import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { RootStackParamList, MainTabParamList } from "@/navigation/RootNavigator";
+import { TopBar } from "@/components/ui/TopBar";
 import { FloatingChatButton } from "@/features/shared/components/FloatingChatButton";
 import { useReducedMotion } from "@/features/shared/hooks/useReducedMotion";
 import { useVibesFeed, type VibeItem } from "@/features/vibes/api/useVibesFeed";
@@ -31,7 +32,12 @@ export function VibesScreen({ navigation }: Props) {
         numColumns={GRID_COLUMNS}
         contentContainerStyle={styles.listContent}
         columnWrapperStyle={styles.row}
-        ListHeaderComponent={<StoriesRow items={vibes} />}
+        ListHeaderComponent={
+          <>
+            <TopBar title="Vibes" onAvatarPress={() => navigation.navigate("Profile")} />
+            <StoriesRow items={vibes} />
+          </>
+        }
         renderItem={({ item, index }) => (
           <MotiView
             style={styles.cell}
