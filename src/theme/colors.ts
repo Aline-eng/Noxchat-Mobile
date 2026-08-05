@@ -15,6 +15,10 @@ export const colors = {
   noir: "#0C1512",
   noir2: "#142019",
   noir3: "#1C2921",
+  // Not part of the moodboard (docs/design-reference.md has no error/danger
+  // swatch) -- a pragmatic addition for form validation, chosen to stay
+  // legible on both latte/ivory and noir/noir2 surfaces.
+  danger: "#B3261E",
 } as const;
 
 export type ColorToken = keyof typeof colors;
