@@ -13,8 +13,8 @@ export function OnboardingScreen({ navigation }: Props) {
     <Pressable
       style={{ flex: 1 }}
       accessibilityRole="button"
-      accessibilityLabel="Continue to app"
-      onPress={() => navigation.replace("Main")}
+      accessibilityLabel="Continue to sign up"
+      onPress={() => navigation.replace("Signup")}
     >
       <PlaceholderScreen
         title="Onboarding"

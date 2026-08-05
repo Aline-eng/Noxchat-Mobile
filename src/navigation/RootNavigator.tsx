@@ -9,6 +9,9 @@ import { colors } from "@/theme";
 import { Avatar } from "@/components/ui/Avatar";
 import { SplashScreen } from "@/features/onboarding/screens/SplashScreen";
 import { OnboardingScreen } from "@/features/onboarding/screens/OnboardingScreen";
+import { SignupScreen } from "@/features/auth/screens/SignupScreen";
+import { LoginScreen } from "@/features/auth/screens/LoginScreen";
+import { VerifyOtpScreen } from "@/features/auth/screens/VerifyOtpScreen";
 import { HomeScreen } from "@/features/home/screens/HomeScreen";
 import { VibesScreen } from "@/features/vibes/screens/VibesScreen";
 import { GamesScreen } from "@/features/games/screens/GamesScreen";
@@ -25,6 +28,9 @@ export type MainTabParamList = {
 export type RootStackParamList = {
   Splash: undefined;
   Onboarding: undefined;
+  Signup: undefined;
+  Login: undefined;
+  VerifyOtp: { phoneNumber: string; mode: "signup" | "login"; birthDate?: string };
   Main: undefined;
   Profile: undefined;
   ChatList: undefined;
@@ -71,6 +77,9 @@ export function RootNavigator() {
       <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Signup" component={SignupScreen} options={{ title: "Sign up" }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
+        <Stack.Screen name="VerifyOtp" component={VerifyOtpScreen} options={{ title: "Verify code" }} />
         <Stack.Screen
           name="Main"
           component={MainTabs}
