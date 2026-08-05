@@ -76,19 +76,82 @@ export const STATUSES: Status[] = [
   { id: "v4", userId: "u4", type: "text", content: "new plant, who dis", hiddenFromUserIds: [], viewedByUserIds: [], reactions: {}, createdAt: "2026-07-22T18:00:00.000Z", expiresAt: "2026-07-23T18:00:00.000Z" },
 ];
 
+// GameSession — shape matches docs/backend-spec.md §4.5 exactly.
+export type GameType = "tictactoe" | "quizbattle" | "drawingguess" | "truthordare";
+
 export interface GameSession {
   id: string;
-  name: string;
-  players: string[];
-  live: boolean;
-  pot: string;
+  gameType: GameType;
+  participantIds: string[];
+  bets: Partial<Record<string, number>>;
+  potTotal: number;
+  status: "waiting" | "active" | "finished";
+  winnerId?: string;
+  state: Record<string, unknown>;
+  spectatorIds: string[];
+  createdAt: string;
 }
 
-export const GAMES: GameSession[] = [
-  { id: "g1", name: "Quiz Battle", players: ["Maya", "Theo", "Sam"], live: true, pot: "35 coins" },
-  { id: "g2", name: "Tic-Tac-Toe", players: ["Priya"], live: false, pot: "Open lobby" },
-  { id: "g3", name: "Truth or Dare", players: ["Maya", "Sam", "Theo", "Priya"], live: true, pot: "No bet" },
+// Display label per game type -- not part of the spec's model, purely a
+// client-side presentation concern (same reasoning as Vibes' swatch color).
+export const GAME_TYPE_LABELS: Record<GameType, string> = {
+  quizbattle: "Quiz Battle",
+  tictactoe: "Tic-Tac-Toe",
+  truthordare: "Truth or Dare",
+  drawingguess: "Drawing & Guess",
+};
+
+export const GAME_SESSIONS: GameSession[] = [
+  {
+    id: "g1",
+    gameType: "quizbattle",
+    participantIds: ["u1", "u3", "u2"],
+    bets: { u1: 15, u3: 10, u2: 10 },
+    potTotal: 35,
+    status: "active",
+    state: {},
+    spectatorIds: [],
+    createdAt: "2026-07-26T20:00:00.000Z",
+  },
+  {
+    id: "g2",
+    gameType: "tictactoe",
+    participantIds: ["u4"],
+    bets: {},
+    potTotal: 0,
+    status: "waiting",
+    state: {},
+    spectatorIds: [],
+    createdAt: "2026-07-26T20:05:00.000Z",
+  },
+  {
+    id: "g3",
+    gameType: "truthordare",
+    participantIds: ["u1", "u2", "u3", "u4"],
+    bets: {},
+    potTotal: 0,
+    status: "active",
+    state: {},
+    spectatorIds: [],
+    createdAt: "2026-07-26T20:10:00.000Z",
+  },
 ];
+
+// NOTE: same kind of gap as Blog/Music in Sprint 2 -- there's no "wallet
+// summary" or "current group" endpoint/model. The underlying numbers map to
+// real fields (GET /users/me/coins §5.6, GET /groups/:id/leaderboard §5.6),
+// just pre-joined here since group-selection isn't a concept in the app yet.
+export interface WalletSummary {
+  coinBalance: number;
+  leaderboardPosition: number;
+  groupName: string;
+}
+
+export const WALLET: WalletSummary = {
+  coinBalance: 128,
+  leaderboardPosition: 2,
+  groupName: "Weekend Trip",
+};
 
 export interface ChatSummary {
   id: string;
