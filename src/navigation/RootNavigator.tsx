@@ -32,11 +32,20 @@ export type RootStackParamList = {
   Main: undefined;
   Profile: undefined;
   ChatList: undefined;
-  Conversation: { chatId: string };
+  Conversation: { chatId: string; displayName: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
+
+// Chat screens are dark per docs/design-reference.md's surface split. Unlike
+// Home/Vibes/Games, ChatList/Conversation are stack (not tab) screens, so
+// each already gets its own independent native header -- no TopBar-style
+// retrofit needed here, just styling the existing one.
+const darkHeaderOptions = {
+  headerStyle: { backgroundColor: colors.noir },
+  headerTintColor: colors.latte,
+} as const;
 
 // TODO(Sprint 2/3): replace the default tab bar with the sliding-pill
 // indicator described in docs/design-reference.md, sized to just 3 items
@@ -80,11 +89,15 @@ export function RootNavigator() {
         <Stack.Screen name="VerifyOtp" component={VerifyOtpScreen} options={{ title: "Verify code" }} />
         <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
-        <Stack.Screen name="ChatList" component={ChatListScreen} options={{ title: "Chats" }} />
+        <Stack.Screen
+          name="ChatList"
+          component={ChatListScreen}
+          options={{ title: "Chats", ...darkHeaderOptions }}
+        />
         <Stack.Screen
           name="Conversation"
           component={ConversationScreen}
-          options={{ title: "" }}
+          options={({ route }) => ({ title: route.params.displayName, ...darkHeaderOptions })}
         />
       </Stack.Navigator>
     </NavigationContainer>
