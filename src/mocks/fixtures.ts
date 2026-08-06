@@ -153,28 +153,190 @@ export const WALLET: WalletSummary = {
   groupName: "Weekend Trip",
 };
 
-export interface ChatSummary {
+// The mock session's user id -- authApi.ts's verifyOtp returns a user with
+// this same id, so a chat fixture can reference "me" as a sender whether or
+// not a real signup/login happened first.
+export const CURRENT_USER_ID = "me";
+
+// Chat / Group — shape matches docs/backend-spec.md §4.2 exactly.
+export type MuteDuration = "1h" | "8h" | "1w" | "forever" | null;
+
+export interface Chat {
   id: string;
-  name: string;
-  preview: string;
-  time: string;
-  unread: number;
+  type: "direct" | "group";
+  memberIds: string[];
+  createdAt: string;
+  lastMessageAt: string;
+  pinnedMessageIds: string[];
+  muteSettings: Partial<Record<string, MuteDuration>>;
+  sleepMode: Partial<Record<string, { startTime: string; endTime: string; lastEmergencyPingAt?: string }>>;
+  throwbackEnabled: Partial<Record<string, boolean>>;
 }
 
-export const CHATS: ChatSummary[] = [
-  { id: "c1", name: "Weekend Trip", preview: "packing list is in the to-do list!", time: "2m", unread: 3 },
-  { id: "c2", name: "Maya", preview: "sent a voice note • 0:42", time: "12m", unread: 0 },
-  { id: "c3", name: "Quiz Night Crew", preview: "sent an Echo message", time: "1h", unread: 0 },
+export interface GroupChat extends Chat {
+  type: "group";
+  name: string;
+  photoUrl?: string;
+  creatorId: string;
+  adminIds: string[];
+  confession: { enabled: boolean; votesToEnable: Partial<Record<string, boolean>> };
+}
+
+export const CHATS: (Chat | GroupChat)[] = [
+  {
+    id: "c1",
+    type: "group",
+    name: "Weekend Trip",
+    memberIds: [CURRENT_USER_ID, "u1", "u2", "u3"],
+    createdAt: "2026-07-20T09:00:00.000Z",
+    lastMessageAt: "2026-07-26T21:58:00.000Z",
+    pinnedMessageIds: [],
+    muteSettings: {},
+    sleepMode: {},
+    throwbackEnabled: {},
+    creatorId: "u1",
+    adminIds: ["u1"],
+    confession: { enabled: false, votesToEnable: {} },
+  },
+  {
+    id: "c2",
+    type: "direct",
+    memberIds: [CURRENT_USER_ID, "u1"],
+    createdAt: "2026-07-18T09:00:00.000Z",
+    lastMessageAt: "2026-07-26T21:48:00.000Z",
+    pinnedMessageIds: [],
+    muteSettings: {},
+    sleepMode: {},
+    throwbackEnabled: {},
+  },
+  {
+    id: "c3",
+    type: "group",
+    name: "Quiz Night Crew",
+    memberIds: [CURRENT_USER_ID, "u1", "u2", "u3", "u4"],
+    createdAt: "2026-07-15T09:00:00.000Z",
+    lastMessageAt: "2026-07-26T20:58:00.000Z",
+    pinnedMessageIds: [],
+    muteSettings: {},
+    sleepMode: {},
+    throwbackEnabled: {},
+    creatorId: "u3",
+    adminIds: ["u3"],
+    confession: { enabled: false, votesToEnable: {} },
+  },
 ];
+
+// Message — shape matches docs/backend-spec.md §4.2 exactly.
+export type MessageType = "text" | "image" | "video" | "voice" | "file";
 
 export interface Message {
   id: string;
-  mine: boolean;
-  text: string;
+  chatId: string;
+  senderId: string;
+  type: MessageType;
+  content?: string;
+  mediaUrl?: string;
+  replyToMessageId?: string;
+  forwardedFromMessageId?: string;
+  isAnonymousConfession: boolean;
+  isEcho: boolean;
+  reactions: Partial<Record<string, string>>;
+  deliveredToUserIds: string[];
+  readByUserIds: string[];
+  deletedForEveryoneAt?: string;
+  deletedForUserIds: string[];
+  createdAt: string;
+  editedAt?: string;
 }
 
 export const MESSAGES: Message[] = [
-  { id: "m1", mine: false, text: "ok who's driving Friday" },
-  { id: "m2", mine: true, text: "I can take 3 people, car's already packed with snacks" },
-  { id: "m3", mine: false, text: "packing list is in the to-do list!" },
+  {
+    id: "m1",
+    chatId: "c1",
+    senderId: "u1",
+    type: "text",
+    content: "ok who's driving Friday",
+    isAnonymousConfession: false,
+    isEcho: false,
+    reactions: {},
+    deliveredToUserIds: [CURRENT_USER_ID, "u2", "u3"],
+    readByUserIds: [CURRENT_USER_ID, "u2", "u3"],
+    deletedForUserIds: [],
+    createdAt: "2026-07-26T21:55:00.000Z",
+  },
+  {
+    id: "m2",
+    chatId: "c1",
+    senderId: CURRENT_USER_ID,
+    type: "text",
+    content: "I can take 3 people, car's already packed with snacks",
+    isAnonymousConfession: false,
+    isEcho: false,
+    reactions: {},
+    deliveredToUserIds: ["u1", "u2", "u3"],
+    readByUserIds: ["u1"],
+    deletedForUserIds: [],
+    createdAt: "2026-07-26T21:57:00.000Z",
+  },
+  {
+    id: "m3",
+    chatId: "c1",
+    senderId: "u1",
+    type: "text",
+    content: "packing list is in the to-do list!",
+    isAnonymousConfession: false,
+    isEcho: false,
+    reactions: {},
+    deliveredToUserIds: [CURRENT_USER_ID, "u2", "u3"],
+    readByUserIds: ["u2", "u3"],
+    deletedForUserIds: [],
+    createdAt: "2026-07-26T21:58:00.000Z",
+  },
+  {
+    id: "m4",
+    chatId: "c2",
+    senderId: "u1",
+    type: "voice",
+    isAnonymousConfession: false,
+    isEcho: false,
+    reactions: {},
+    deliveredToUserIds: [CURRENT_USER_ID],
+    readByUserIds: [],
+    deletedForUserIds: [],
+    createdAt: "2026-07-26T21:48:00.000Z",
+  },
+  {
+    id: "m5",
+    chatId: "c3",
+    senderId: "u3",
+    type: "text",
+    content: "sent an Echo message",
+    isAnonymousConfession: false,
+    isEcho: true,
+    reactions: {},
+    deliveredToUserIds: [CURRENT_USER_ID, "u1", "u2", "u4"],
+    readByUserIds: [CURRENT_USER_ID, "u1", "u2", "u4"],
+    deletedForUserIds: [],
+    createdAt: "2026-07-26T20:58:00.000Z",
+  },
+];
+
+// VoiceNote — shape matches docs/backend-spec.md §4.6 exactly.
+export interface VoiceNote {
+  messageId: string;
+  durationSeconds: number;
+  waveformData: number[];
+  transcript: string;
+  editedTranscript?: string;
+  detectedLanguage: "en" | "es" | "hi" | "ar" | "fr";
+}
+
+export const VOICE_NOTES: VoiceNote[] = [
+  {
+    messageId: "m4",
+    durationSeconds: 42,
+    waveformData: [4, 8, 6, 10, 14, 9, 5, 11, 13, 7, 4, 9, 12, 6, 3],
+    transcript: "hey, just wanted to say the packing list looks great, adding sunscreen to it",
+    detectedLanguage: "en",
+  },
 ];

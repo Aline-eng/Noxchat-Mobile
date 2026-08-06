@@ -3,6 +3,8 @@
 // the real endpoints so screens can be built and swapped in Sprint 6 without
 // changing their call sites.
 
+import { CURRENT_USER_ID } from "@/mocks/fixtures";
+
 export interface AuthUser {
   id: string;
   phoneNumber: string;
@@ -64,7 +66,7 @@ export async function verifyOtp(params: {
   }
   return {
     user: {
-      id: `mock-user-${params.phoneNumber}`,
+      id: CURRENT_USER_ID,
       phoneNumber: params.phoneNumber,
       displayName: "You",
       birthDate: params.birthDate ?? "2000-01-01",
