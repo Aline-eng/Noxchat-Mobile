@@ -3,17 +3,23 @@ import { Pressable } from "react-native";
 import { MotiView } from "moti";
 import { MessageCircle } from "lucide-react-native";
 import { colors } from "@/theme";
+import { useMagneticPress } from "@/features/shared/hooks/useMagneticPress";
 
 interface Props {
   onPress: () => void;
 }
 
-// TODO(Sprint 4): swap the press-scale for the full magnetic drag-toward-
-// touch behavior described in docs/design-reference.md. This stub only
-// proves the position + basic spring feedback.
+// Magnetic press behavior per docs/design-reference.md: eases toward the
+// touch point on press-in, springs back on release. Opens chat from
+// Home/Vibes/Games.
 export function FloatingChatButton({ onPress }: Props) {
+  const { onLayout, onPressIn, onPressOut, offset } = useMagneticPress(0.35, 10);
+
   return (
     <Pressable
+      onLayout={onLayout}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="Open chats"
@@ -21,7 +27,7 @@ export function FloatingChatButton({ onPress }: Props) {
     >
       {({ pressed }) => (
         <MotiView
-          animate={{ scale: pressed ? 0.92 : 1 }}
+          animate={{ scale: pressed ? 0.92 : 1, translateX: offset.x, translateY: offset.y }}
           transition={{ type: "spring", damping: 16, stiffness: 180 }}
           style={{
             width: 56,
