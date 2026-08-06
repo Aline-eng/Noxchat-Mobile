@@ -1,5 +1,6 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Search } from "lucide-react-native";
 import { Avatar } from "@/components/ui/Avatar";
 import { colors, fontFamily, fontSize, radii, spacing } from "@/theme";
@@ -20,9 +21,13 @@ const ICON_BUTTON_SIZE = 36;
 // of each screen's own scrollable content (see docs/web-prototype-reference.jsx),
 // not as React Navigation chrome, since Home/Vibes/Games can't share one
 // stack-level header once some of them need to be dark and some light.
+// Because it's not the native header, it doesn't get the native header's
+// automatic status-bar inset -- pad by the safe-area top inset ourselves.
 export function TopBar({ title = "Noxchat", dark = false, onAvatarPress, onSearchPress }: Props) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + spacing.lg }]}>
       <Text style={[styles.title, { color: dark ? colors.latte : colors.charcoal }]}>{title}</Text>
       <View style={styles.actions}>
         {onSearchPress ? (
@@ -49,7 +54,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
     paddingBottom: spacing.xs,
   },
   title: {
